@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+  console.log("Register route hit");
   try {
     const [{ hash }, { getPrismaClient }] = await Promise.all([
       import("bcryptjs"),
@@ -26,12 +28,11 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ data: user, error: null }, { status: 201 });
   } catch (err) {
-    console.error("REGISTER ERROR:", err);
-    const message = err instanceof Error ? err.message : "Internal server error.";
+    console.error("REGISTER ERROR FULL:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
     return NextResponse.json(
       {
         data: null,
-        error: process.env.NODE_ENV === "production" ? "Internal server error." : message,
+        error: err instanceof Error ? err.message : "Internal server error.",
       },
       { status: 500 },
     );
