@@ -4,12 +4,26 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
+function getPrismaDatabaseUrl() {
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is not set.");
+  }
+
+  const url = new URL(databaseUrl);
+  url.searchParams.set("pgbouncer", "true");
+  url.searchParams.set("connection_limit", "1");
+
+  return url.toString();
+}
+
 export function getPrismaClient() {
   if (!globalForPrisma.prisma) {
     globalForPrisma.prisma = new PrismaClient({
       datasources: {
         db: {
-          url: process.env.DATABASE_URL + "?pgbouncer=true&connection_limit=1",
+          url: getPrismaDatabaseUrl(),
         },
       },
     });
