@@ -6,7 +6,13 @@ const globalForPrisma = globalThis as unknown as {
 
 export function getPrismaClient() {
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient();
+    globalForPrisma.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL + "?pgbouncer=true&connection_limit=1",
+        },
+      },
+    });
   }
 
   return globalForPrisma.prisma;
