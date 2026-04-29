@@ -5,12 +5,6 @@ import { useMemo } from "react";
 import { Pencil, Trash2, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { getFieldKey, getFieldLabel, getRenderableFields } from "@/lib/config/fieldRuntime";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
@@ -105,27 +99,29 @@ export function DynamicTable({ entity, data, onEdit, onDelete }: DynamicTablePro
                     </TableCell>
                   );
                 })}
-                <TableCell className="text-right py-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="glass border-white/10 rounded-xl min-w-[120px]">
-                      <DropdownMenuItem onClick={() => onEdit?.(row)} className="gap-2 rounded-lg cursor-pointer">
-                        <Pencil className="h-3.5 w-3.5" />
-                        {t("Edit")}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => onDelete?.(row._id ?? row.id, row)} 
-                        className="gap-2 rounded-lg text-destructive focus:text-destructive cursor-pointer"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        {t("Delete")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <TableCell className="py-4">
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-xl border border-black/[0.05] bg-white/70 px-3 text-foreground hover:bg-black/[0.04]"
+                      onClick={() => onEdit?.(row)}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      {t("Edit")}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-xl border border-destructive/15 bg-destructive/5 px-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={() => onDelete?.(row._id ?? row.id, row)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      {t("Delete")}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             );
